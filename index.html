@@ -5,6 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project #1 - Major League Baseball Form</title>
     <script src="./scripts/script.js"></script>
+    <link rel="stylesheet" href="./styles/base.css" />
+    <link rel="stylesheet" href="./styles/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body></body>
+  <body>
+    <main>
+      <h1>Major League Baseball Form</h1>
+      <!--  Global Fieldset -->
+      <fieldset class="json-form">
+        <div class="json-retrieve">
+          <!-- Retrieve JSON Fieldset -->
+          <fieldset class="retrieve-filter">
+            <div class="select-group">
+              <label for="year">Year:</label>
+              <select name="year" id="year">
+                <option value="" disabled selected>- Select -</option>
+              </select>
+            </div>
+            <div class="select-group">
+              <label for="month">Month:</label>
+              <select id="month">
+                <option value="" disabled selected>- Select -</option>
+              </select>
+            </div>
+            <div class="select-group">
+              <label for="day">Day:</label>
+              <select id="day">
+                <option value="" disabled selected>- Select -</option>
+              </select>
+            </div>
+          </fieldset>
+          <button id="retrieve-json" type="button">Retrieve</button>
+        </div>
+        <!-- Data Output Area -->
+        <div class="data-output">
+          <div class="input-group">
+            <label for="home-team">Home Team Name:</label>
+            <input type="text" name="home-team" id="home-team" />
+          </div>
+          <div class="input-group">
+            <label for="away-team">Aways Team Name:</label>
+            <input type="text" name="away-team" id="away-team" />
+          </div>
+          <div class="input-group">
+            <label for="winning-pitcher">Winning Pitcher:</label>
+            <input type="text" name="winning-pitcher" id="winning-pitcher" />
+          </div>
+          <div class="input-group">
+            <label for="losing-pitcher">Losing Pitcher:</label>
+            <input type="text" name="losing-pitcher" id="losing-pitcher" />
+          </div>
+          <div class="input-group">
+            <label for="venue">Venue:</label>
+            <input type="text" name="venue" id="venue" />
+          </div>
+        </div>
+        <div class="data-output-buttons">
+          <button id="previous-game" type="button">Previous Game</button>
+          <button id="next-game" type="button">Next Game</button>
+          <button id="save-changes" type="button">Save Changes</button>
+        </div>
+      </fieldset>
+    </main>
+  </body>
 </html>
