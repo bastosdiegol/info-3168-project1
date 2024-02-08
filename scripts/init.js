@@ -9,3 +9,7 @@ addEventListener("load", function () {
   const daySelect = document.getElementById("day");
   addSelectOptions(daySelect, 1, 31);
 });
+
+// MLB Stats Test Request
+var MLBStats = new MLBStatsAsyncHandler();
+MLBStats.getStats(3, 6, 2019);
