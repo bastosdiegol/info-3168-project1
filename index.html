@@ -71,8 +71,20 @@
           </div>
         </div>
         <div class="data-output-buttons">
-          <button id="previous-game" type="button">Previous Game</button>
-          <button id="next-game" type="button">Next Game</button>
+          <button
+            id="previous-game"
+            type="button"
+            onclick="changeMatch(GAME_NAV.PREVIOUS)"
+          >
+            Previous Game
+          </button>
+          <button
+            id="next-game"
+            type="button"
+            onclick="changeMatch(GAME_NAV.NEXT)"
+          >
+            Next Game
+          </button>
           <button id="save-changes" type="button">Save Changes</button>
         </div>
       </fieldset>
