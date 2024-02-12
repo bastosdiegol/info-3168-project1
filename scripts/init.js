@@ -30,12 +30,14 @@ const GAME_NAV = Object.freeze({
  * Object that will Handle Asynchronous JSON Request to MLB Stats API.
  * @global @constant
  * @property {XMLHttpRequest} request Data API for AJAX.
+ * @property {String} currentKey String containing the current date key for savedSearchMap
  * @property {Array<Object>} gamesObjArray Object array containing the games list from the JSON Response.
- * @property {Map<Date, Object>} savedSearchMap Map containing all API requests done in a single session.
+ * @property {Map<String, Object>} savedSearchMap Key: Date.toDateString(), 00000m ,nnnnnnnnnnnnnnnnnnnnnnn./Value: JSON Response Object
  * @property {number} ISOK Status code for successful request
  */
 const MLBStatsAPIHandler = {
   request: new XMLHttpRequest(),
+  currentKey: "",
   gamesObjArray: [],
   savedSearchMap: new Map(),
   ISOK: 200,
@@ -50,13 +52,15 @@ const MLBStatsAPIHandler = {
    * @param {number} year - Year of the matches.
    */
   getStats: function (day, month, year) {
-    let tempDate = new Date(year, month, day);
+    this.currentKey = new Date(year, month, day).toDateString();
     gamesIndex = 0;
     // Checks if date passed by parameter was searched alredy
     // To avoid sending the same request to the API in the current session
-    if (this.savedSearchMap.has(tempDate)) {
+    if (this.savedSearchMap.has(this.currentKey)) {
       // Search found, get Map value and saves the Games Object Array
-      this.gamesObjArray = this.savedSearchMap.get(tempDate).dates[0].games;
+      this.gamesObjArray = this.savedSearchMap.get(
+        this.currentKey
+      ).dates[0].games;
       console.log("Used previously saved search.");
       // First Game Match Info to the Page
       displayGameInfo(this.gamesObjArray[gamesIndex]);
@@ -70,7 +74,7 @@ const MLBStatsAPIHandler = {
         if (this.request.status === this.ISOK) {
           // Convert the Response to Object and Saves it.
           let statsData = JSON.parse(this.request.responseText);
-          this.savedSearchMap.set(tempDate, statsData);
+          this.savedSearchMap.set(this.currentKey, statsData);
           // Updates the current Games Object Array
           this.gamesObjArray = statsData.dates[0].games;
           // First Game Match Info to the Page

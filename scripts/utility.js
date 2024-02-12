@@ -52,5 +52,17 @@ function changeMatch(direction) {
  */
 function displayGameInfo(game) {
   console.log(game);
-  // TODO
+  document.getElementById("home-team").value = game.teams.home.team.name;
+  document.getElementById("away-team").value = game.teams.away.team.name;
+  document.getElementById("venue").value = game.venue.name;
+}
+
+/**
+ * Function that will get the information from the HTML form and save into the object.
+ */
+function saveGameInfo() {
+  let currentGame = MLBStatsAPIHandler.gamesObjArray[gamesIndex];
+  currentGame.teams.home.team.name = document.getElementById("home-team").value;
+  currentGame.teams.away.team.name = document.getElementById("away-team").value;
+  currentGame.venue.name = document.getElementById("venue").value;
 }
