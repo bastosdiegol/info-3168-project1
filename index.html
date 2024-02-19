@@ -20,7 +20,13 @@
   </head>
   <body>
     <main>
-      <h1>Major League Baseball Form</h1>
+      <div class="banner">
+        <img
+          src="https://www.mlbstatic.com/team-logos/league-on-dark/1.svg"
+          alt="MLB Logo"
+        />
+        <h1>Major League Baseball Form</h1>
+      </div>
       <!--  Global Fieldset -->
       <fieldset class="json-form">
         <div class="json-retrieve">
@@ -45,18 +51,32 @@
               </select>
             </div>
           </fieldset>
-          <button id="retrieve-json" type="button">Retrieve</button>
+          <button id="retrieve-json" type="button" onclick="searchGames()">
+            Retrieve
+          </button>
         </div>
         <!-- Data Output Area -->
         <div class="data-output">
           <div class="input-group">
             <label for="home-team">Home Team:</label>
-            <img src="" alt="" class="team-logo" id="home-team-logo" />
+            <img
+              src=""
+              alt=""
+              class="team-logo"
+              id="home-team-logo"
+              style="display: none"
+            />
             <input type="text" name="home-team" id="home-team" />
           </div>
           <div class="input-group">
             <label for="away-team">Aways Team:</label>
-            <img src="" alt="" class="team-logo" id="away-team-logo" />
+            <img
+              src=""
+              alt=""
+              class="team-logo"
+              id="away-team-logo"
+              style="display: none"
+            />
             <input type="text" name="away-team" id="away-team" />
           </div>
           <div class="input-group">
@@ -92,6 +112,10 @@
           </button>
         </div>
       </fieldset>
+      <div class="no-games-div" id="no-games-div">
+        <p class="no-games-message">There's no game for this date.</p>
+        <a href="#" class="no-games-close" id="no-games-close">X</a>
+      </div>
     </main>
   </body>
 </html>

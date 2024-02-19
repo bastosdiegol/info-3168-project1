@@ -8,6 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const daySelect = document.getElementById("day");
   addSelectOptions(daySelect, 1, 31);
+
+  // Sets the Notification "Close" link
+  const noGamesClose = document.getElementById("no-games-close");
+  noGamesClose.addEventListener("click", function () {
+    this.parentElement.style.display = "none";
+  });
 });
 
 /**
@@ -57,13 +63,21 @@ const MLBStatsAPIHandler = {
     // Checks if date passed by parameter was searched alredy
     // To avoid sending the same request to the API in the current session
     if (this.savedSearchMap.has(this.currentKey)) {
-      // Search found, get Map value and saves the Games Object Array
-      this.gamesObjArray = this.savedSearchMap.get(
-        this.currentKey
-      ).dates[0].games;
+      const savedSearch = this.savedSearchMap.get(this.currentKey);
+      // Checks if there's any game on this date
+      if (savedSearch.totalGames === 0) {
+        // Display No Games Message
+        document.getElementById("no-games-div").style.display = "flex";
+        clearGamesForm();
+      } else {
+        // Hides No Games Message
+        document.getElementById("no-games-div").style.display = "none";
+        // Search found and has games, get Map value and saves the Games Object Array
+        this.gamesObjArray = savedSearch.dates[0].games;
+        // First Game Match Info to the Page
+        displayGameInfo(this.gamesObjArray[gamesIndex]);
+      }
       console.log("Used previously saved search.");
-      // First Game Match Info to the Page
-      displayGameInfo(this.gamesObjArray[gamesIndex]);
     } else {
       let url = `https://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date=${day}/${month}/${year}`;
       /**
@@ -75,10 +89,19 @@ const MLBStatsAPIHandler = {
           // Convert the Response to Object and Saves it.
           let statsData = JSON.parse(this.request.responseText);
           this.savedSearchMap.set(this.currentKey, statsData);
-          // Updates the current Games Object Array
-          this.gamesObjArray = statsData.dates[0].games;
-          // First Game Match Info to the Page
-          displayGameInfo(this.gamesObjArray[gamesIndex]);
+          // Checks if there's any game on this date
+          if (statsData.totalGames === 0) {
+            // Display No Games Message
+            document.getElementById("no-games-div").style.display = "flex";
+            clearGamesForm();
+          } else {
+            // Hides No Games Message
+            document.getElementById("no-games-div").style.display = "none";
+            // Updates the current Games Object Array
+            this.gamesObjArray = statsData.dates[0].games;
+            // First Game Match Info to the Page
+            displayGameInfo(this.gamesObjArray[gamesIndex]);
+          }
         } else {
           console.log("HTTP request error.");
         }
@@ -88,6 +111,3 @@ const MLBStatsAPIHandler = {
     }
   },
 };
-
-// Test Request
-MLBStatsAPIHandler.getStats(3, 6, 2019);

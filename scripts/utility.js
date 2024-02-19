@@ -9,15 +9,32 @@ function addSelectOptions(selectElement, min, max) {
   let option;
   for (let i = min; i <= max; i++) {
     option = document.createElement("option");
-    option.value = i;
     // Conditional to pad numbers < 10 with 0 at the start
     if (i < 10) {
       option.textContent = String(i).padStart(2, "0");
+      option.value = option.textContent;
     } else {
       option.textContent = i;
+      option.value = i;
     }
     selectElement.appendChild(option);
   }
+}
+
+/**
+ * Function that starts the AJAX comunication between the HTML Form and the MLB API.
+ */
+function searchGames() {
+  const inputDay = document.getElementById("day").value;
+  const inputMonth = document.getElementById("month").value;
+  const inputYear = document.getElementById("year").value;
+
+  if (!inputDay || !inputMonth || !inputYear) {
+    alert("Please, select a valid date.");
+    return;
+  }
+
+  MLBStatsAPIHandler.getStats(inputDay, inputMonth, inputYear);
 }
 
 /**
@@ -51,7 +68,6 @@ function changeMatch(direction) {
  * @param {Object} game - JSON Object containing all information related to a game.
  */
 function displayGameInfo(game) {
-  console.log(game);
   // Home Team Logo
   let homeTeamLogoElement = document.getElementById("home-team-logo");
   homeTeamLogoElement.src = `https://www.mlbstatic.com/team-logos/team-cap-on-light/${game.teams.home.team.id}.svg`;
@@ -60,6 +76,10 @@ function displayGameInfo(game) {
   let awayTeamLogoElement = document.getElementById("away-team-logo");
   awayTeamLogoElement.alt = game.teams.away.team.name;
   awayTeamLogoElement.src = `https://www.mlbstatic.com/team-logos/team-cap-on-light/${game.teams.away.team.id}.svg`;
+  if (homeTeamLogoElement.style.display == "none") {
+    homeTeamLogoElement.style.display = "block";
+    awayTeamLogoElement.style.display = "block";
+  }
   // Teams Names
   document.getElementById("home-team").value = game.teams.home.team.name;
   document.getElementById("away-team").value = game.teams.away.team.name;
@@ -69,12 +89,17 @@ function displayGameInfo(game) {
     document.getElementById("losing-score").value = game.teams.away.score;
     document.getElementById("home-team").className = "winner";
     document.getElementById("away-team").className = "loser";
-  } else {
+  } else if (game.teams.away.isWinner) {
     // Away team is the winner
     document.getElementById("winning-score").value = game.teams.away.score;
     document.getElementById("losing-score").value = game.teams.home.score;
     document.getElementById("home-team").className = "loser";
     document.getElementById("away-team").className = "winner";
+  } else {
+    document.getElementById("winning-score").value = game.teams.home.score;
+    document.getElementById("losing-score").value = game.teams.away.score;
+    document.getElementById("home-team").className = "draw";
+    document.getElementById("away-team").className = "draw";
   }
   // Match Venue
   document.getElementById("venue").value = game.venue.name;
@@ -86,25 +111,21 @@ function displayGameInfo(game) {
  */
 function saveGameInfo() {
   let currentGame = MLBStatsAPIHandler.gamesObjArray[gamesIndex];
+  const homeTeamElement = document.getElementById("home-team");
+  const awayTeamElement = document.getElementById("away-team");
+  const winningScoreElement = document.getElementById("winning-score");
+  const losingScoreElement = document.getElementById("losing-score");
   // Saves Team Names Inputs
-  currentGame.teams.home.team.name = document.getElementById("home-team").value;
-  currentGame.teams.away.team.name = document.getElementById("away-team").value;
+  currentGame.teams.home.team.name = homeTeamElement.value;
+  currentGame.teams.away.team.name = awayTeamElement.value;
   // Checks if the Home team is the current winner
   // Then Updates Home and Away teams new scores
   if (currentGame.teams.home.isWinner) {
-    currentGame.teams.home.score = Number(
-      document.getElementById("winning-score").value
-    );
-    currentGame.teams.away.score = Number(
-      document.getElementById("losing-score").value
-    );
-  } else {
-    currentGame.teams.home.score = Number(
-      document.getElementById("losing-score").value
-    );
-    currentGame.teams.away.score = Number(
-      document.getElementById("winning-score").value
-    );
+    currentGame.teams.home.score = Number(winningScoreElement.value);
+    currentGame.teams.away.score = Number(losingScoreElement.value);
+  } else if (currentGame.teams.away.isWinner) {
+    currentGame.teams.home.score = Number(losingScoreElement.value);
+    currentGame.teams.away.score = Number(winningScoreElement.value);
   }
   // Verify if the current Winner status of the game was changed
   // Checks if home team is winner and if its score is lower
@@ -120,8 +141,6 @@ function saveGameInfo() {
     currentGame.teams.home.isWinner = !currentGame.teams.home.isWinner;
     currentGame.teams.away.isWinner = !currentGame.teams.away.isWinner;
     // Swap the background colors
-    const homeTeamElement = document.getElementById("home-team");
-    const awayTeamElement = document.getElementById("away-team");
     if (homeTeamElement.className === "winner") {
       homeTeamElement.className = "loser";
       awayTeamElement.className = "winner";
@@ -130,12 +149,45 @@ function saveGameInfo() {
       awayTeamElement.className = "loser";
     }
     // Swap the Score Input to reflect the new data
-    let tempScore = Number(document.getElementById("winning-score").value);
-    document.getElementById("winning-score").value = Number(
-      document.getElementById("losing-score").value
-    );
-    document.getElementById("losing-score").value = tempScore;
+    let tempScore = Number(winningScoreElement.value);
+    winningScoreElement.value = Number(losingScoreElement.value);
+    losingScoreElement.value = tempScore;
+  } else if (
+    currentGame.teams.home.isWinner === undefined &&
+    currentGame.teams.away.isWinner === undefined
+  ) {
+    // Drawn Conditional for current game
+    // Winning Score Element -> Home Score
+    // Losing Score Element -> Away Score
+    if (winningScoreElement.value > losingScoreElement.value) {
+      homeTeamElement.className = "winner";
+      awayTeamElement.className = "loser";
+      currentGame.teams.home.isWinner = true;
+      currentGame.teams.away.isWinner = false;
+    } else {
+      homeTeamElement.className = "loser";
+      awayTeamElement.className = "winner";
+      currentGame.teams.home.isWinner = false;
+      currentGame.teams.away.isWinner = true;
+    }
+    currentGame.teams.home.score = Number(winningScoreElement.value);
+    currentGame.teams.away.score = Number(losingScoreElement.value);
   }
   // Saves Venue Input
   currentGame.venue.name = document.getElementById("venue").value;
+}
+
+/**
+ * Function that clears all form inputs for the games form.
+ */
+function clearGamesForm() {
+  document.getElementById("home-team").value = "";
+  document.getElementById("home-team").className = "";
+  document.getElementById("away-team").value = "";
+  document.getElementById("away-team").className = "";
+  document.getElementById("winning-score").value = "";
+  document.getElementById("losing-score").value = "";
+  document.getElementById("venue").value = "";
+  document.getElementById("home-team-logo").style.display = "none";
+  document.getElementById("away-team-logo").style.display = "none";
 }

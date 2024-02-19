@@ -50,4 +50,13 @@ button {
 button {
   height: fit-content;
   padding: 2px 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  transition: all 1s ease;
+}
+
+button:hover {
+  color: white;
+  background-color: #686868;
+  border: 1px solid #686868;
 }

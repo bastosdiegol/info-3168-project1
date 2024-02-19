@@ -1,3 +1,13 @@
+.banner {
+  display: flex;
+  gap: 10px;
+}
+
+.banner img {
+  width: auto;
+  height: 57.6px;
+}
+
 /* Global Fieldset */
 
 main {
@@ -7,6 +17,9 @@ main {
 .json-form {
   width: 600px;
   background-color: rgba(128, 128, 128, 0.1);
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
+  margin-top: 10px;
 }
 
 .data-output {
@@ -24,7 +37,7 @@ main {
 
 .data-output-buttons {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   padding: 10px;
   margin-top: 10px;
 }
@@ -48,6 +61,9 @@ main {
   gap: 5px;
   width: 15%;
   padding: 10px 20px;
+  border-radius: 10px;
+  background-color: rgba(128, 128, 128, 0.342);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
 }
 
 .select-group {
@@ -65,6 +81,36 @@ main {
   background-color: #90ee90;
 }
 
+.draw {
+  background-color: #d3d3d3;
+}
+
 .loser {
   background-color: #ffa07a;
+}
+
+.no-games-div {
+  display: none;
+  justify-content: space-between;
+  padding: 10px;
+  color: white;
+  background-color: rgb(255, 193, 5, 0.95);
+  border-radius: 6px;
+  margin: 0 10px 10px;
+  width: 350px;
+  position: fixed;
+  z-index: 10;
+  right: 0;
+  bottom: 0;
+}
+
+.no-games-close {
+  text-decoration: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: white;
+  background-color: unset;
+  border: unset;
+  border-left: 1px dashed white;
+  padding-left: 10px;
 }
