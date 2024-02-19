@@ -5,7 +5,7 @@ main {
 }
 
 .json-form {
-  width: 40%;
+  width: 600px;
   background-color: rgba(128, 128, 128, 0.1);
 }
 
@@ -54,4 +54,17 @@ main {
   display: flex;
   gap: 15px;
   justify-content: space-between;
+}
+
+.team-logo {
+  width: 32px;
+  height: 32px;
+}
+
+.winner {
+  background-color: #90ee90;
+}
+
+.loser {
+  background-color: #ffa07a;
 }

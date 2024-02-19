@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /**
- * Global Index for the Games Object Array.
+ * Global Index for the JSON Games Object Array.
  * @global @type {number}
  */
 var gamesIndex = 0;
