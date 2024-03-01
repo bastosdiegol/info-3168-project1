@@ -118,60 +118,86 @@ function saveGameInfo() {
   // Saves Team Names Inputs
   currentGame.teams.home.team.name = homeTeamElement.value;
   currentGame.teams.away.team.name = awayTeamElement.value;
-  // Checks if the Home team is the current winner
-  // Then Updates Home and Away teams new scores
-  if (currentGame.teams.home.isWinner) {
-    currentGame.teams.home.score = Number(winningScoreElement.value);
-    currentGame.teams.away.score = Number(losingScoreElement.value);
-  } else if (currentGame.teams.away.isWinner) {
-    currentGame.teams.home.score = Number(losingScoreElement.value);
-    currentGame.teams.away.score = Number(winningScoreElement.value);
-  }
-  // Verify if the current Winner status of the game was changed
-  // Checks if home team is winner and if its score is lower
-  // OR if away team is winner and if its score is lower
-  // Then swap the winners
-  if (
-    (currentGame.teams.home.isWinner &&
-      currentGame.teams.home.score < currentGame.teams.away.score) ||
-    (currentGame.teams.away.isWinner &&
-      currentGame.teams.away.score < currentGame.teams.home.score)
-  ) {
-    // Swap the winners
-    currentGame.teams.home.isWinner = !currentGame.teams.home.isWinner;
-    currentGame.teams.away.isWinner = !currentGame.teams.away.isWinner;
-    // Swap the background colors
-    if (homeTeamElement.className === "winner") {
-      homeTeamElement.className = "loser";
-      awayTeamElement.className = "winner";
-    } else if (homeTeamElement.className === "loser") {
-      homeTeamElement.className = "winner";
-      awayTeamElement.className = "loser";
+  // Checks if the Game was not Tied
+  if (!currentGame.isTie) {
+    // Checks if the Home or Away team is the current winner
+    // Then Updates their new scores
+    if (currentGame.teams.home.isWinner) {
+      currentGame.teams.home.score = Number(winningScoreElement.value);
+      currentGame.teams.away.score = Number(losingScoreElement.value);
+    } else {
+      currentGame.teams.home.score = Number(losingScoreElement.value);
+      currentGame.teams.away.score = Number(winningScoreElement.value);
     }
-    // Swap the Score Input to reflect the new data
-    let tempScore = Number(winningScoreElement.value);
-    winningScoreElement.value = Number(losingScoreElement.value);
-    losingScoreElement.value = tempScore;
-  } else if (
-    currentGame.teams.home.isWinner === undefined &&
-    currentGame.teams.away.isWinner === undefined
-  ) {
-    // Drawn Conditional for current game
-    // Winning Score Element -> Home Score
-    // Losing Score Element -> Away Score
+    // Verify if the current Winner status of the game was changed
+    // Checks if home team is winner and if its score is lower
+    // OR if away team is winner and if its score is lower
+    // Then swap the winners
+    if (
+      (currentGame.teams.home.isWinner &&
+        currentGame.teams.home.score < currentGame.teams.away.score) ||
+      (currentGame.teams.away.isWinner &&
+        currentGame.teams.away.score < currentGame.teams.home.score)
+    ) {
+      // Swap the winners
+      currentGame.teams.home.isWinner = !currentGame.teams.home.isWinner;
+      currentGame.teams.away.isWinner = !currentGame.teams.away.isWinner;
+      // Swap the background colors and
+      if (homeTeamElement.className === "winner") {
+        homeTeamElement.className = "loser";
+        awayTeamElement.className = "winner";
+        currentGame.teams.home.isWinner = false;
+        currentGame.teams.away.isWinner = true;
+      } else if (homeTeamElement.className === "loser") {
+        homeTeamElement.className = "winner";
+        awayTeamElement.className = "loser";
+        currentGame.teams.home.isWinner = true;
+        currentGame.teams.away.isWinner = false;
+      }
+      // Swap the Score Input to reflect the new data
+      let tempScore = Number(winningScoreElement.value);
+      winningScoreElement.value = Number(losingScoreElement.value);
+      losingScoreElement.value = tempScore;
+    } else if (currentGame.teams.home.score == currentGame.teams.away.score) {
+      // Game Score Updated to Tie
+      currentGame.isTie = true;
+      currentGame.teams.home.isWinner = undefined;
+      currentGame.teams.away.isWinner = undefined;
+      homeTeamElement.className = "draw";
+      awayTeamElement.className = "draw";
+    }
+  } else {
+    // Game was Tied
+    // Boolean for previous game that was Tie but now the "Loser Input" team won
+    // Swap scores are necessary to match new update score
+    let newScoreSwap = false;
+    // Checks if the new match score is still tie or not
     if (winningScoreElement.value > losingScoreElement.value) {
       homeTeamElement.className = "winner";
       awayTeamElement.className = "loser";
+      currentGame.isTie = false;
       currentGame.teams.home.isWinner = true;
       currentGame.teams.away.isWinner = false;
-    } else {
+    } else if (winningScoreElement.value < losingScoreElement.value) {
       homeTeamElement.className = "loser";
       awayTeamElement.className = "winner";
+      currentGame.isTie = false;
       currentGame.teams.home.isWinner = false;
       currentGame.teams.away.isWinner = true;
+      newScoreSwap = true;
     }
+    // TODO: I'm assuming Home=Winner && Away=Loser HTML Inputs
+    // TODO: Ask the professor about this step
+    // Winning Score Element -> Home Score
+    // Losing Score Element -> Away Score
     currentGame.teams.home.score = Number(winningScoreElement.value);
     currentGame.teams.away.score = Number(losingScoreElement.value);
+    if (newScoreSwap) {
+      // Swap the Score Input to reflect the new data
+      let tempScore = Number(winningScoreElement.value);
+      winningScoreElement.value = Number(losingScoreElement.value);
+      losingScoreElement.value = tempScore;
+    }
   }
   // Saves Venue Input
   currentGame.venue.name = document.getElementById("venue").value;

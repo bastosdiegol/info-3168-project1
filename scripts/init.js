@@ -77,7 +77,7 @@ const MLBStatsAPIHandler = {
         // First Game Match Info to the Page
         displayGameInfo(this.gamesObjArray[gamesIndex]);
       }
-      console.log("Used previously saved search.");
+      console.log("Used Search Paraments Existing in the Map.");
     } else {
       let url = `https://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date=${day}/${month}/${year}`;
       /**
@@ -108,6 +108,7 @@ const MLBStatsAPIHandler = {
       };
       this.request.open("GET", url, true);
       this.request.send();
+      console.log("AJAX Request Sent.");
     }
   },
 };
