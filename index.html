@@ -97,6 +97,7 @@
             id="previous-game"
             type="button"
             onclick="changeMatch(GAME_NAV.PREVIOUS)"
+            disabled
           >
             Previous Game
           </button>
@@ -104,10 +105,16 @@
             id="next-game"
             type="button"
             onclick="changeMatch(GAME_NAV.NEXT)"
+            disabled
           >
             Next Game
           </button>
-          <button id="save-changes" type="button" onclick="saveGameInfo()">
+          <button
+            id="save-changes"
+            type="button"
+            onclick="saveGameInfo()"
+            disabled
+          >
             Save Changes
           </button>
         </div>

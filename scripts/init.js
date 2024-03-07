@@ -79,7 +79,8 @@ const MLBStatsAPIHandler = {
       }
       console.log("Used Search Paraments Existing in the Map.");
     } else {
-      let url = `https://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date=${day}/${month}/${year}`;
+      // URL Date is in MM / DD / YYYY format
+      let url = `https://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date=${month}/${day}/${year}`;
       /**
        * Async anonymous arrow function to handle the response.
        * @function @async

@@ -103,6 +103,10 @@ function displayGameInfo(game) {
   }
   // Match Venue
   document.getElementById("venue").value = game.venue.name;
+  // Enable Navigation Buttons
+  document.getElementById("previous-game").disabled = false;
+  document.getElementById("next-game").disabled = false;
+  document.getElementById("save-changes").disabled = false;
 }
 
 /**
@@ -186,8 +190,6 @@ function saveGameInfo() {
       currentGame.teams.away.isWinner = true;
       newScoreSwap = true;
     }
-    // TODO: I'm assuming Home=Winner && Away=Loser HTML Inputs
-    // TODO: Ask the professor about this step
     // Winning Score Element -> Home Score
     // Losing Score Element -> Away Score
     currentGame.teams.home.score = Number(winningScoreElement.value);
@@ -216,4 +218,7 @@ function clearGamesForm() {
   document.getElementById("venue").value = "";
   document.getElementById("home-team-logo").style.display = "none";
   document.getElementById("away-team-logo").style.display = "none";
+  document.getElementById("previous-game").disabled = true;
+  document.getElementById("next-game").disabled = true;
+  document.getElementById("save-changes").disabled = true;
 }

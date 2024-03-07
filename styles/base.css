@@ -55,7 +55,11 @@ button {
   transition: all 1s ease;
 }
 
-button:hover {
+button:disabled {
+  transition: unset;
+}
+
+button:hover:enabled {
   color: white;
   background-color: #686868;
   border: 1px solid #686868;
